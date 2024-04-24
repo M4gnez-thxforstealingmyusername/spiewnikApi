@@ -19,27 +19,19 @@
         $valid = false;
 
         foreach ($routes as $route => $dynamic) {
-            $url = '';
 
-            if($dynamic)
+            $uriD_break = explode("/", $uri);
+
+            if($uriD_break[3] != "" && $dynamic)
             {
-                $uriD_break = explode("/", $uri);
-                $dynamicId = $uriD_break[count($uriD_break)-1];
-                $uriD_break[count($uriD_break)-1] = null;
-                $uriD = join("/", $uriD_break);
-
-                $url = "/spiewnikApi/".$route;
-
-                if($url == $uriD && $dynamicId != ""){
-                    call_user_func(str_replace("/", '', $route), $dynamicId);
+                if($uriD_break[2]."/" == $route){
+                    call_user_func($uriD_break[2], $uriD_break[3]);
                     $valid = true;
                 }
-
             }
-            else{
-                $url = "/spiewnikApi/".$route;
-                if($url == $uri || rtrim($url, "/") == $uri){
-                    call_user_func(str_replace("/", '', $route));
+            else if($uriD_break[3] == "" && !$dynamic){
+                if($uriD_break[2]."/" == $route){
+                    call_user_func($uriD_break[2]);
                     $valid = true;
                 }
             }
@@ -57,7 +49,6 @@
     function song($id){
         Songs::one($id);
     }
-
     function songs(){
         Songs::handle();
     }

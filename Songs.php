@@ -7,9 +7,12 @@ class Songs{
 
         switch($_SERVER["REQUEST_METHOD"]){
             case "GET":
-                $request = "SELECT * FROM song";
+                $sql = "SELECT * FROM song";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute();
 
-                $result = $conn->query($request);
+                $result = $stmt->get_result();
+
                 if($result->num_rows > 0)
                 {
                     $rows = mysqli_fetch_all($result);
@@ -28,9 +31,13 @@ class Songs{
 
         switch($_SERVER["REQUEST_METHOD"]){
             case "GET":
-                $request = "SELECT * FROM song WHERE id = ".$id;
+                $sql = "SELECT * FROM song WHERE id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("s", $id);
+                $stmt->execute();
 
-                $result = $conn->query($request);
+                $result = $stmt->get_result();
+
                 if($result->num_rows > 0)
                 {
                     $rows = mysqli_fetch_row($result);
