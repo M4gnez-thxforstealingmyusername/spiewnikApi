@@ -2,7 +2,7 @@
 
 class Songs{
     public static function handle(){
-        include "./conn.php";
+        include "./config/conn.php";
         header('Content-type: text/plain; charset=utf-8');
 
         switch($_SERVER["REQUEST_METHOD"]){
@@ -27,7 +27,7 @@ class Songs{
     }
 
     public static function one($id){
-        include "./conn.php";
+        include "./config/conn.php";
 
         switch($_SERVER["REQUEST_METHOD"]){
             case "GET":

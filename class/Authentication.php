@@ -15,7 +15,7 @@
         }
 
         private static function pushToken($id, $token){
-            include "./conn.php";
+            include "./config/conn.php";
 
             $sql = "INSERT INTO `remembertoken` values (DEFAULT, ?, ?)";
             $stmt = $conn->prepare($sql);
@@ -24,12 +24,12 @@
         }
 
         private static function getToken($cookie){
-            include "./conn.php";
+            include "./config/conn.php";
             list($id, $token) = explode("-", $cookie);
 
             $sql = "SELECT * FROM remembertoken WHERE userId = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param('i', $id);
+            $stmt->bind_param('i', intval($id));
             $stmt->execute();
 
             $result = $stmt->get_result();
@@ -46,7 +46,7 @@
 
         public static function LogIn(){
             if(Authentication::isPost()){
-                include "./conn.php";
+                include "./config/conn.php";
                 $username = $_POST["username"];
                 $password = $_POST["password"];
 
@@ -105,7 +105,7 @@
                     $city = $_POST["city"];
                     $username = $_POST["username"];
                     $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-                    include "./conn.php";
+                    include "./config/conn.php";
 
                     $sql = "INSERT INTO `user`(`cityId`, `username`, `password`) VALUES (?, ?, ?)";
                     $stmt = $conn->prepare($sql);
@@ -123,7 +123,7 @@
 
         public static function LogOut(){
             session_start();
-            unset($_SESSION['username']);
+            unset($_SESSION["user"]);
             session_destroy();
         }
 

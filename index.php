@@ -1,6 +1,6 @@
 <?php
-    require_once "./Songs.php";
-    require_once "./Authentication.php";
+    require_once "./class/Songs.php";
+    require_once "./class/Authentication.php";
 
 
     $routes = array(
