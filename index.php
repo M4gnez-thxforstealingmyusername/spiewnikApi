@@ -1,6 +1,7 @@
 <?php
     require_once "./class/Songs.php";
     require_once "./class/Authentication.php";
+    require_once "./config/Err.php";
 
 
     $routes = array(
@@ -39,11 +40,12 @@
 
         if(!$valid){
             http_response_code(404);
-            include('404.php');
+            include('./config/404.php');
             exit();
         }
     }
 
+    Err::GetErrors();
     router($routes);
 
     function song($id){

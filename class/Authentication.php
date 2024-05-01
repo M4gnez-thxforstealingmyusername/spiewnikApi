@@ -1,9 +1,14 @@
 <?php
+    include("./config/Err.php");
     class Authentication{
         const TOKEN_KEY = "losowe";
 
         private static function isPost(){
-            return $_SERVER["REQUEST_METHOD"] == "POST";
+            if($_SERVER["REQUEST_METHOD"] == "POST")
+                return true;
+            else{
+                Err::Die(1);
+            }
         }
 
         private static function GenerateToken(){
@@ -26,10 +31,11 @@
         private static function getToken($cookie){
             include "./config/conn.php";
             list($id, $token) = explode("-", $cookie);
+            $id = intval($id);
 
             $sql = "SELECT * FROM remembertoken WHERE userId = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param('i', intval($id));
+            $stmt->bind_param('i', $id);
             $stmt->execute();
 
             $result = $stmt->get_result();
@@ -37,11 +43,11 @@
             if($result->num_rows > 0){
                 while($row = $result->fetch_assoc()){
                     if(hash_equals(hash_hmac('sha256', $row["token"], Authentication::TOKEN_KEY), $token))
-                        return true; //0
+                        return true;
                 }
-                return false; //1
+                Err::Die(8);
             }
-            return false; //2
+            Err::Die(3);
         }
 
         public static function LogIn(){
@@ -75,19 +81,24 @@
 
                         }
                         else
-                            echo json_encode('{id: '.$row["id"].', logged: false}', JSON_UNESCAPED_UNICODE);
+                            Err::Die(4);
                     }
                 }
                 else
-                    echo json_encode('{id: '.$row["id"].', logged: false}', JSON_UNESCAPED_UNICODE);
+                    Err::Die(3);
             }
-            else
-                echo json_encode('{id: '.$row["id"].', logged: false}', JSON_UNESCAPED_UNICODE);
         }
 
 
         public static function TokenLogIn(){
-            $cookie = isset($_COOKIE['autologin']) ? $_COOKIE['autologin'] : '';
+            $cookie = "";
+            if(isset($_COOKIE['autologin']))
+                $cookie = $_COOKIE['autologin'];
+            else
+            {
+                Err::Die(6);
+            }
+
             if(Authentication::getToken($cookie)){
                 list($id, $token) = explode("-", $cookie);
                 session_start();
@@ -117,7 +128,7 @@
                     echo json_encode('{id: '.$id.', logged: true}', JSON_UNESCAPED_UNICODE);
                 }
                 else
-                    echo json_encode('{id: '.$row["id"].', logged: false}', JSON_UNESCAPED_UNICODE);
+                    Err::Die(5);
             }
         }
 

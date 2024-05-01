@@ -1,0 +1,11 @@
+[
+    {"code": 0, "message": "connection error"},
+    {"code": 1, "message": "invalid request method"},
+    {"code": 2, "message": "missing data"},
+    {"code": 3, "message": "user not found"},
+    {"code": 4, "message": "invalid password"},
+    {"code": 5, "message": "invalid parameter"},
+    {"code": 6, "message": "missing token"},
+    {"code": 7, "message": "no data found"},
+    {"code": 8, "message": "invalid token"}
+]
